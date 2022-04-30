@@ -23,6 +23,7 @@ function getAssignments(req, res) {
         {
             page: parseInt(req.query.page) || 1,
             limit: parseInt(req.query.limit) || 10,
+            sort: { datecreation : 'desc' }
         },
         (err, assignments) => {
             if (err) {
