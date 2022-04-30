@@ -12,7 +12,6 @@ let Assignment = require('../model/assignment');
     });
 }*/
 
-
 function getAssignments(req, res) {
     console.log("Function getAssignments")
     var aggregateQuery = Assignment.aggregate();
@@ -34,6 +33,50 @@ function getAssignments(req, res) {
     );
 }
 
+function getAssignmentsMax(req, res){
+    Assignment.aggregate([
+        {
+            '$sort': {
+              'note': -1
+            }
+          }, {
+            '$match': {
+              'rendu': true
+            }
+        }
+    ], (err, assignment) => {
+        if (err) {
+            res.send(err)
+        }
+        res.send(assignment);
+    }).limit(6);
+}
+
+
+function getStatByMatiere(req, res) {
+    Assignment.aggregate([
+        {
+            '$lookup': {
+              'from': 'matieres', 
+              'localField': 'idMatiere', 
+              'foreignField': 'id', 
+              'as': 'matiere'
+            }
+          }, {
+            '$group': {
+              '_id': '$matiere.matiere', 
+              'moyenne': {
+                '$avg': '$note'
+              }
+            }
+        }
+    ], (err, assignment) => {
+        if (err) {
+            res.send(err)
+        }
+        res.send(assignment);
+    });
+}
 
 // Récupérer un assignment par son id (GET)
 function getAssignment(req, res) {
@@ -65,18 +108,30 @@ function getDetailsAssignment(req, res) {
     });
 }
 
-function getStatAssignment(req, res) {
-    Assignment.$match({note : { $gt :10}}, (err, res) => {
-        if (err) {
-            res.send(err)
-        }
-        console.log(res)
-        //res.json({ count: count });
-    });
-}
+
 
 function CountAssignment(req, res) {
     Assignment.countDocuments({}
+        , (err, count) => {
+            if (err) {
+                res.send(err)
+            }
+            res.json({ count: count });
+        });
+}
+
+function CountAssignmentRendu(req, res) {
+    Assignment.countDocuments({rendu:true}
+        , (err, count) => {
+            if (err) {
+                res.send(err)
+            }
+            res.json({ count: count });
+        });
+}
+
+function CountAssignmentNonRendu(req, res) {
+    Assignment.countDocuments({rendu:false}
         , (err, count) => {
             if (err) {
                 res.send(err)
@@ -138,4 +193,14 @@ function deleteAssignment(req, res) {
 
 
 
-module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment, getDetailsAssignment, CountAssignment,getStatAssignment };
+module.exports = { getAssignments, 
+                   postAssignment, 
+                   getAssignment, 
+                   updateAssignment, 
+                   deleteAssignment, 
+                   getDetailsAssignment, 
+                   CountAssignment, 
+                   getStatByMatiere,
+                   getAssignmentsMax,
+                   CountAssignmentRendu,
+                   CountAssignmentNonRendu};

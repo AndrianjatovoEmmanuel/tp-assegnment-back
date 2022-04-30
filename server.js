@@ -56,6 +56,12 @@ app.route(prefix + '/assignmentsdetails')
 
 app.route(prefix + '/statassignments')
   .get(assignment.getDetailsAssignment);
+  
+app.route(prefix + '/assignmentsmax')
+  .get(assignment.getAssignmentsMax);
+
+app.route(prefix + '/statmatiere')
+  .get(assignment.getStatByMatiere);
 
 app.route(prefix + '/assignments/:id')
   .get(assignment.getAssignment)
@@ -63,6 +69,12 @@ app.route(prefix + '/assignments/:id')
 
 app.route(prefix + '/countAssignments')
   .get(assignment.CountAssignment);
+
+app.route(prefix + '/countAssignmentsRendu')
+  .get(assignment.CountAssignmentRendu);
+
+app.route(prefix + '/countAssignmentsNonRendu')
+  .get(assignment.CountAssignmentNonRendu);
 
 app.route(prefix + '/assignments')
   .post(assignment.postAssignment)
