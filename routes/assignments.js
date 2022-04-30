@@ -152,6 +152,7 @@ function postAssignment(req, res) {
     assignment.idMatiere = req.body.idMatiere;
     assignment.idAuteur = req.body.idAuteur;
     assignment.remarque = req.body.remarque;
+    //assignment.datecreation = req.body.datecreation
 
     console.log("POST assignment reçu :");
     console.log(assignment)

@@ -10,7 +10,8 @@ let AssignmentSchema = Schema({
     note : { type : Number , required:false ,min: 0, max: 20},
     idAuteur:{ type: Number,required:true},
     idMatiere:{ type: Number,required:true},
-    remarque:{type:String,required:false}
+    remarque:{type:String,required:false},
+    datecreation : {type :Date , default: new Date()}
 });
 
 AssignmentSchema.plugin(aggregatePaginate);
